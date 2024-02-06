@@ -1,0 +1,15 @@
+﻿<Window x:Class="AutoClicker.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AutoClicker"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Button x:Name="StartRecord" Content="Start record" HorizontalAlignment="Left" Margin="279,96,0,0" VerticalAlignment="Top" Click="StartRecord_Click"/>
+        <Button x:Name="StopRecord" Content="Stop record" HorizontalAlignment="Left" Margin="279,151,0,0" VerticalAlignment="Top" Click="StopRecord_Click"/>
+        <Button Content="Play sequence" HorizontalAlignment="Left" Margin="279,0,0,0" VerticalAlignment="Center" Click="Button_Click"/>
+
+    </Grid>
+</Window>
