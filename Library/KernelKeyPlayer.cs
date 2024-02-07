@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading.Channels;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using static AutoClicker.Library.InputStructs;
 
@@ -13,14 +8,14 @@ namespace AutoClicker.Library
 {
     public class KernelKeyPlayer
     {
-        private Stopwatch SW;
+        private Stopwatch? SW;
 
         private Channel<string> KeyEventMessageChannel { get; }
         public ChannelReader<string> KeyEventMessageChannelReader { get; }
         private ChannelWriter<string> KeyEventMessageChannelWriter { get; }
 
         private bool Playing = false;
-        private Task KeyPlayingTask;
+        private Task? KeyPlayingTask;
 
         public KernelKeyPlayer()
         {
@@ -38,9 +33,13 @@ namespace AutoClicker.Library
             {
                 KeyPlayingTask = Task.Run(async () =>
                 {
+                    Console.WriteLine(keyPlaybackBuffer.Count);
                     var currentTimestamp = 0L;
+                    // TODO: сделать сборку последовательности на этапе остановки записи последовательности
                     var keyInputSequences = KeyInputSequencer.BuildSequence(keyPlaybackBuffer);
                     var enumerator = keyInputSequences.GetEnumerator();
+
+                    await Task.Delay(interludeDelay);
 
                     SW = new();
                     SW.Start();
@@ -49,16 +48,18 @@ namespace AutoClicker.Library
                     {
                         try
                         {
-                            await Task.Delay(interludeDelay);
-
                             currentTimestamp = SW.ElapsedMicroseconds();
-                            //var millisecondsToSleep = (enumerator.Current.FrameTimestamp - currentTimestamp) / 1_000.0 - ThresholdAwaitTaskDelayInMilliseconds;
-                            //if (millisecondsToSleep > SleepAccuracyAdjustmentInMicroseconds)
-                            //{
-                            //    await Task.Delay((int)millisecondsToSleep);
-                            //}
 
-                            while (SW.ElapsedMicroseconds() < enumerator.Current.FrameTimestamp - SleepAccuracyAdjustmentInMicroseconds) { }
+                            while (currentTimestamp < enumerator.Current.FrameTimestamp)
+                            {
+                                var remainingMicroseconds = enumerator.Current.FrameTimestamp - currentTimestamp;
+                                if (remainingMicroseconds > SleepAccuracyAdjustmentInMicroseconds)
+                                {
+                                    await Task.Delay(TimeSpan.FromTicks(remainingMicroseconds - SleepAccuracyAdjustmentInMicroseconds));
+                                }
+                                currentTimestamp = SW.ElapsedMicroseconds();
+                            }
+
 
 
                             var err = NativeMethods.SendInput(
@@ -67,7 +68,7 @@ namespace AutoClicker.Library
                                     Marshal.SizeOf(typeof(INPUT))
                                 );
 
-                            Console.WriteLine((Keys)enumerator.Current.InputSequence[0].data.ki.keyCode);
+                            // Console.WriteLine((Keys)enumerator.Current.InputSequence[0].data.ki.keyCode);
 
                             if (err > 1)
                             {
@@ -75,7 +76,7 @@ namespace AutoClicker.Library
                             }
                             else
                             {
-                                Console.WriteLine($"Key Sequence:\r\n{enumerator.Current.InputSequence}\r\nSimulated Timestamp: {currentTimestamp} μs");
+                                Console.WriteLine($"Simulated Timestamp: {currentTimestamp} us");
                             }
                         }
                         catch (Exception ex)
@@ -83,8 +84,6 @@ namespace AutoClicker.Library
                             Console.WriteLine(ex.ToString());
                         }
                     }
-
-                    Console.WriteLine("after while");
 
                     Playing = false;
                 });

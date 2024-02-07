@@ -8,7 +8,9 @@
         Title="MainWindow" Height="450" Width="800">
     <Grid>
         <Button x:Name="StartRecord" Content="Start record" HorizontalAlignment="Left" Margin="279,96,0,0" VerticalAlignment="Top" Click="StartRecord_Click"/>
+        
         <Button x:Name="StopRecord" Content="Stop record" HorizontalAlignment="Left" Margin="279,151,0,0" VerticalAlignment="Top" Click="StopRecord_Click"/>
+
         <Button Content="Play sequence" HorizontalAlignment="Left" Margin="279,0,0,0" VerticalAlignment="Center" Click="Button_Click"/>
 
     </Grid>

@@ -72,19 +72,26 @@ namespace AutoClicker.Library
             }
         }
 
-
         /// <summary>
         /// меняет оффсет таймингов для того чтобы начало было 0
         /// </summary>
         private void ReformatSequenceTimings()
         {
-
+            var startTiming = KeyPlaybackBuffer.Keys.Min();
+            var resultDict = KeyPlaybackBuffer.ToDictionary(
+                kvp => kvp.Key - startTiming,
+                kvp => kvp.Value
+            );
+            KeyPlaybackBuffer = resultDict;
         }
+
+         private long? startTiming = null;
 
         private void GlobalHookKeyDown(object? sender, KeyEventArgs e)
         {
             var time = SW.ElapsedMicroseconds();
-            Console.WriteLine($"{time} {e.KeyCode}; is down");
+            // startTiming ??= time;
+            // Console.WriteLine($"{time-startTiming} {time} {e.KeyCode}; is down");
             var keyEvent = new KeyEvent
             {
                 KeyCode = e.KeyCode,
@@ -103,7 +110,8 @@ namespace AutoClicker.Library
         private void GlobalHookKeyUp(object? sender, KeyEventArgs e)
         {
             var time = SW.ElapsedMicroseconds();
-            Console.WriteLine($"{time} {e.KeyCode}; is up");
+            // startTiming ??= time;
+            // Console.WriteLine($"{time-startTiming} {time} {e.KeyCode}; is up");
             var keyEvent = new KeyEvent
             {
                 KeyCode = e.KeyCode,
