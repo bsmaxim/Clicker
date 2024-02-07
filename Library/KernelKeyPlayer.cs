@@ -60,23 +60,22 @@ namespace AutoClicker.Library
                                 currentTimestamp = SW.ElapsedMicroseconds();
                             }
 
-
-
-                            var err = NativeMethods.SendInput(
+                            if (enumerator.Current.InputSequence != null)
+                            {
+                                var err = NativeMethods.SendInput(
                                     (uint)enumerator.Current.InputSequence.Length,
                                     enumerator.Current.InputSequence,
                                     Marshal.SizeOf(typeof(INPUT))
                                 );
 
-                            // Console.WriteLine((Keys)enumerator.Current.InputSequence[0].data.ki.keyCode);
-
-                            if (err > 1)
-                            {
-                                Console.WriteLine($"Error returned with SendInput. ErrorCode: {err}");
-                            }
-                            else
-                            {
-                                Console.WriteLine($"Simulated Timestamp: {currentTimestamp} us");
+                                if (err > 1)
+                                {
+                                    Console.WriteLine($"Error returned with SendInput. ErrorCode: {err}");
+                                }
+                                else
+                                {
+                                    Console.WriteLine($"Simulated Timestamp: {currentTimestamp} us");
+                                }
                             }
                         }
                         catch (Exception ex)

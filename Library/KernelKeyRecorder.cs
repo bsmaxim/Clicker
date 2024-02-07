@@ -85,13 +85,9 @@ namespace AutoClicker.Library
             KeyPlaybackBuffer = resultDict;
         }
 
-         private long? startTiming = null;
-
         private void GlobalHookKeyDown(object? sender, KeyEventArgs e)
         {
             var time = SW.ElapsedMicroseconds();
-            // startTiming ??= time;
-            // Console.WriteLine($"{time-startTiming} {time} {e.KeyCode}; is down");
             var keyEvent = new KeyEvent
             {
                 KeyCode = e.KeyCode,
@@ -110,8 +106,6 @@ namespace AutoClicker.Library
         private void GlobalHookKeyUp(object? sender, KeyEventArgs e)
         {
             var time = SW.ElapsedMicroseconds();
-            // startTiming ??= time;
-            // Console.WriteLine($"{time-startTiming} {time} {e.KeyCode}; is up");
             var keyEvent = new KeyEvent
             {
                 KeyCode = e.KeyCode,
