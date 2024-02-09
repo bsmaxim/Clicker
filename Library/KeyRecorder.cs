@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace AutoClicker.Library
 {
-    public class KernelKeyRecorder
+    public class KeyRecorder
     {
         // буфер записи, типа Dict<long, List<KeyEvent>
         public Dictionary<long, List<KeyEvent>> KeyPlaybackBuffer { get; set; } = [];
@@ -13,17 +13,11 @@ namespace AutoClicker.Library
         private IKeyboardMouseEvents m_GlobalHook;
         private bool IsStarted = false;
 
-        private Channel<string> KeyChannel { get; }
-        public ChannelReader<string> KeyChannelReader { get; }
-        private ChannelWriter<string> KeyChannelWriter { get; }
 
-        public KernelKeyRecorder()
+        public KeyRecorder()
         {
             SW = new();
             m_GlobalHook = Hook.GlobalEvents();
-            KeyChannel = Channel.CreateUnbounded<string>();
-            KeyChannelReader = KeyChannel.Reader;
-            KeyChannelWriter = KeyChannel.Writer;
         }
 
         public void Start()
@@ -33,8 +27,6 @@ namespace AutoClicker.Library
                 Console.WriteLine("Already started");
                 return;
             }
-
-            // TODO: Запись в канал записи (логи)
 
             KeyPlaybackBuffer = [];
             SW = new();
@@ -91,7 +83,8 @@ namespace AutoClicker.Library
             var keyEvent = new KeyEvent
             {
                 KeyCode = e.KeyCode,
-                Timestamp = time
+                Timestamp = time,
+                IsKeyUp = false
             };
             if (KeyPlaybackBuffer.TryGetValue(time, out List<KeyEvent>? value))
             {
@@ -109,7 +102,8 @@ namespace AutoClicker.Library
             var keyEvent = new KeyEvent
             {
                 KeyCode = e.KeyCode,
-                Timestamp = time
+                Timestamp = time,
+                IsKeyUp = true
             };
             if (KeyPlaybackBuffer.TryGetValue(time, out List<KeyEvent>? value))
             {

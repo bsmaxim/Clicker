@@ -8,27 +8,31 @@ namespace AutoClicker;
 /// </summary>
 public partial class MainWindow : Window
 {
-    private KernelKeyRecorder recorder = new();
-    private Thread? recordThread;
-    private KernelKeyPlayer player = new();
+    private readonly KeyRecorder keyboardRecorder = new();
+    private readonly KeyPlayer keyboardPlayer = new();
+    // private readonly MouseRecorder mouseRecorder = new();
+    // private readonly MousePlayer mousePlayer = new();
 
     public MainWindow()
     {
         InitializeComponent();
     }
 
-    private void StartRecord_Click(object sender, RoutedEventArgs e)
+    private void OnStartRecord(object sender, RoutedEventArgs e)
     {
-        recorder.Start();
+        keyboardRecorder.Start();
+        // mouseRecorder.Start();
     }
 
-    private void StopRecord_Click(object sender, RoutedEventArgs e)
+    private void OnStopRecord(object sender, RoutedEventArgs e)
     {
-        recorder.Stop();
+        keyboardRecorder.Stop();
+        // mouseRecorder.Stop();
     }
 
-    private void Button_Click(object sender, RoutedEventArgs e)
+    private void OnPlaySequence(object sender, RoutedEventArgs e)
     {
-        player.Play(recorder.KeyPlaybackBuffer, 50);
+        keyboardPlayer.Play(keyboardRecorder.KeyPlaybackBuffer, 50);
+        // mousePlayer.Play(mouseRecorder.KeyPlaybackBuffer, 50);
     }
 }

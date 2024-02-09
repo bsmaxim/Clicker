@@ -1,13 +1,7 @@
-﻿using Gma.System.MouseKeyHook;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using static AutoClicker.Library.InputStructs;
+﻿using System.Windows.Forms;
+using static AutoClicker.Library.Input.InputStructs;
 
-namespace AutoClicker.Library
+namespace AutoClicker.Library.Input
 {
     public class KeyInputSequencer
     {
@@ -24,7 +18,7 @@ namespace AutoClicker.Library
 
                 foreach (var key in kvp.Value)
                 {
-                    inputs.Add(ConvertKeyToInput(key.KeyCode));
+                    inputs.Add(ConvertKeyToInput(key.KeyCode, key.IsKeyUp));
                 }
 
                 sequence.InputSequence = inputs.ToArray();
@@ -37,7 +31,7 @@ namespace AutoClicker.Library
         private const int KEYBOARDEVENT = 1;
         private const int SCANVALUE = 0;
 
-        private static INPUT ConvertKeyToInput(Keys key)
+        private static INPUT ConvertKeyToInput(Keys key, bool IsKeyUp)
         {
             return new INPUT
             {
@@ -48,9 +42,9 @@ namespace AutoClicker.Library
                     {
                         keyCode = (ushort)key,
                         scan = SCANVALUE,
-                        flags = 0,
+                        flags = IsKeyUp ? KEY_UP : 0,
                         time = 0,
-                        extraInfo = IntPtr.Zero
+                        extraInfo = nint.Zero
                     }
                 }
             };

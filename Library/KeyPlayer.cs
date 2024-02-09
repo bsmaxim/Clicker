@@ -1,32 +1,24 @@
 ﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading.Channels;
-using System.Windows.Forms;
-using static AutoClicker.Library.InputStructs;
+using AutoClicker.Library.Input;
+using static AutoClicker.Library.Input.InputStructs;
 
 namespace AutoClicker.Library
 {
-    public class KernelKeyPlayer
+    public class KeyPlayer
     {
-        private Stopwatch? SW;
-
-        private Channel<string> KeyEventMessageChannel { get; }
-        public ChannelReader<string> KeyEventMessageChannelReader { get; }
-        private ChannelWriter<string> KeyEventMessageChannelWriter { get; }
+        private Stopwatch SW;
 
         private bool Playing = false;
         private Task? KeyPlayingTask;
 
-        public KernelKeyPlayer()
+        public KeyPlayer()
         {
-            KeyEventMessageChannel = Channel.CreateUnbounded<string>();
-            KeyEventMessageChannelReader = KeyEventMessageChannel.Reader;
-            KeyEventMessageChannelWriter = KeyEventMessageChannel.Writer;
+            SW = new();
         }
 
         private const long SleepAccuracyAdjustmentInMicroseconds = 1;
-        private const int ThresholdAwaitTaskDelayInMilliseconds = 1;
-
         public void Play(Dictionary<long, List<KeyEvent>> keyPlaybackBuffer, int interludeDelay)
         {
             if (!Playing)
