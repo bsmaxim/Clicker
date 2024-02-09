@@ -1,27 +1,27 @@
 ﻿using System.Windows.Forms;
-using static AutoClicker.Library.Input.InputStructs;
+using static AutoClicker.Library.Input.WinInputStructs;
 
 namespace AutoClicker.Library.Input
 {
-    public class KeyInputSequencer
+    public class InputSequencer
     {
-        public static List<KeyInputSequence> BuildSequence(Dictionary<long, List<KeyEvent>> KeyPlaybackBuffer)
+        public static List<InputSequence> BuildSequence(Dictionary<long, List<KeyEvent>> KeyPlaybackBuffer)
         {
-            var sequences = new List<KeyInputSequence>();
+            var sequences = new List<InputSequence>();
 
             // проход по словарю и добавление в sequences
             foreach (var kvp in KeyPlaybackBuffer)
             {
-                var sequence = new KeyInputSequence();
+                var sequence = new InputSequence();
                 var inputs = new List<INPUT>();
-                sequence.FrameTimestamp = kvp.Key;
+                sequence.Timestamp = kvp.Key;
 
                 foreach (var key in kvp.Value)
                 {
                     inputs.Add(ConvertKeyToInput(key.KeyCode, key.IsKeyUp));
                 }
 
-                sequence.InputSequence = inputs.ToArray();
+                sequence.Sequence = inputs.ToArray();
                 sequences.Add(sequence);
             }
 
@@ -48,6 +48,29 @@ namespace AutoClicker.Library.Input
                     }
                 }
             };
+        }
+
+        public static List<InputSequence> BuildSequence(Dictionary<long, List<MouseEvent>> KeyPlaybackBuffer)
+        {
+            var sequences = new List<InputSequence>();
+
+            // проход по словарю и добавление в sequences
+            foreach (var kvp in KeyPlaybackBuffer)
+            {
+                var sequence = new InputSequence();
+                var inputs = new List<INPUT>();
+                sequence.Timestamp = kvp.Key;
+
+                foreach (var key in kvp.Value)
+                {
+                    // inputs.Add(ConvertMouseToInput();
+                }
+
+                sequence.Sequence = inputs.ToArray();
+                sequences.Add(sequence);
+            }
+
+            return sequences;
         }
     }
 }

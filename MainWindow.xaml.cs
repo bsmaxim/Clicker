@@ -1,5 +1,6 @@
 ﻿using System.Windows;
-using AutoClicker.Library;
+using AutoClicker.Library.Keyboard;
+using AutoClicker.Library.Mouse;
 
 namespace AutoClicker;
 
@@ -10,8 +11,8 @@ public partial class MainWindow : Window
 {
     private readonly KeyRecorder keyboardRecorder = new();
     private readonly KeyPlayer keyboardPlayer = new();
-    // private readonly MouseRecorder mouseRecorder = new();
-    // private readonly MousePlayer mousePlayer = new();
+    private readonly MouseRecorder mouseRecorder = new();
+    private readonly MousePlayer mousePlayer = new();
 
     public MainWindow()
     {
@@ -20,19 +21,19 @@ public partial class MainWindow : Window
 
     private void OnStartRecord(object sender, RoutedEventArgs e)
     {
-        keyboardRecorder.Start();
-        // mouseRecorder.Start();
+        // keyboardRecorder.Start();
+        mouseRecorder.Start();
     }
 
     private void OnStopRecord(object sender, RoutedEventArgs e)
     {
-        keyboardRecorder.Stop();
-        // mouseRecorder.Stop();
+        // keyboardRecorder.Stop();
+        mouseRecorder.Stop();
     }
 
     private void OnPlaySequence(object sender, RoutedEventArgs e)
     {
-        keyboardPlayer.Play(keyboardRecorder.KeyPlaybackBuffer, 50);
+        // keyboardPlayer.Play(keyboardRecorder.KeyPlaybackBuffer, 50);
         // mousePlayer.Play(mouseRecorder.KeyPlaybackBuffer, 50);
     }
 }

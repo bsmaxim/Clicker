@@ -2,9 +2,9 @@
 using System.Runtime.InteropServices;
 using System.Threading.Channels;
 using AutoClicker.Library.Input;
-using static AutoClicker.Library.Input.InputStructs;
+using static AutoClicker.Library.Input.WinInputStructs;
 
-namespace AutoClicker.Library
+namespace AutoClicker.Library.Keyboard
 {
     public class KeyPlayer
     {
@@ -28,7 +28,7 @@ namespace AutoClicker.Library
                     Console.WriteLine(keyPlaybackBuffer.Count);
                     var currentTimestamp = 0L;
                     // TODO: сделать сборку последовательности на этапе остановки записи последовательности
-                    var keyInputSequences = KeyInputSequencer.BuildSequence(keyPlaybackBuffer);
+                    var keyInputSequences = InputSequencer.BuildSequence(keyPlaybackBuffer);
                     var enumerator = keyInputSequences.GetEnumerator();
 
                     await Task.Delay(interludeDelay);
@@ -42,9 +42,9 @@ namespace AutoClicker.Library
                         {
                             currentTimestamp = SW.ElapsedMicroseconds();
 
-                            while (currentTimestamp < enumerator.Current.FrameTimestamp)
+                            while (currentTimestamp < enumerator.Current.Timestamp)
                             {
-                                var remainingMicroseconds = enumerator.Current.FrameTimestamp - currentTimestamp;
+                                var remainingMicroseconds = enumerator.Current.Timestamp - currentTimestamp;
                                 if (remainingMicroseconds > SleepAccuracyAdjustmentInMicroseconds)
                                 {
                                     await Task.Delay(TimeSpan.FromTicks(remainingMicroseconds - SleepAccuracyAdjustmentInMicroseconds));
@@ -52,11 +52,11 @@ namespace AutoClicker.Library
                                 currentTimestamp = SW.ElapsedMicroseconds();
                             }
 
-                            if (enumerator.Current.InputSequence != null)
+                            if (enumerator.Current.Sequence != null)
                             {
                                 var err = NativeMethods.SendInput(
-                                    (uint)enumerator.Current.InputSequence.Length,
-                                    enumerator.Current.InputSequence,
+                                    (uint)enumerator.Current.Sequence.Length,
+                                    enumerator.Current.Sequence,
                                     Marshal.SizeOf(typeof(INPUT))
                                 );
 
