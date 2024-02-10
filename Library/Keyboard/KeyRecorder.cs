@@ -21,14 +21,18 @@ namespace AutoClicker.Library.Keyboard
         private void HookKeyDown(object? sender, KeyEventArgs e)
         {
             var timestamp = SW.ElapsedMicroseconds();
-            var keyEvent = CreateKeyEvent(e.KeyCode, timestamp, false);
-            AddInputEventToBuffer(keyEvent, timestamp);
+            HookEvent(e, timestamp, false);
         }
 
         private void HookKeyUp(object? sender, KeyEventArgs e)
         {
             var timestamp = SW.ElapsedMicroseconds();
-            var keyEvent = CreateKeyEvent(e.KeyCode, timestamp, true);
+            HookEvent(e, timestamp, true);
+        }
+        private void HookEvent(KeyEventArgs e, long timestamp, bool isKeyUp)
+        {
+            Console.WriteLine($"${e.KeyCode} {timestamp} {e.KeyCode} {e.KeyValue} {e.KeyData} {e.KeyData} {(isKeyUp ? "up" : "down")}");
+            var keyEvent = CreateKeyEvent(e.KeyCode, timestamp, isKeyUp);
             AddInputEventToBuffer(keyEvent, timestamp);
         }
 

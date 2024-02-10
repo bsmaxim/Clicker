@@ -3,45 +3,44 @@ using static AutoClicker.Library.Input.WinInputStructs;
 
 namespace AutoClicker.Library.Input
 {
-    public class InputSequencer
+    public static class InputSequencer
     {
         public static List<InputSequence> BuildSequence(Dictionary<long, List<KeyEvent>> KeyPlaybackBuffer)
         {
             var sequences = new List<InputSequence>();
 
-            // проход по словарю и добавление в sequences
             foreach (var kvp in KeyPlaybackBuffer)
             {
-                var sequence = new InputSequence();
+                var timestamp = kvp.Key;
+                var keyEvents = kvp.Value;
                 var inputs = new List<INPUT>();
-                sequence.Timestamp = kvp.Key;
 
-                foreach (var key in kvp.Value)
+                foreach (var keyEvent in keyEvents)
                 {
-                    inputs.Add(ConvertKeyToInput(key.KeyCode, key.IsKeyUp));
+                    inputs.Add(ConvertKeyToInput(keyEvent.KeyCode, keyEvent.IsKeyUp));
                 }
 
-                sequence.Sequence = inputs.ToArray();
-                sequences.Add(sequence);
+                sequences.Add(new InputSequence
+                {
+                    Timestamp = timestamp,
+                    Value = [.. inputs]
+                });
             }
 
             return sequences;
         }
 
-        private const int KEYBOARDEVENT = 1;
-        private const int SCANVALUE = 0;
-
         private static INPUT ConvertKeyToInput(Keys key, bool IsKeyUp)
         {
             return new INPUT
             {
-                type = KEYBOARDEVENT,
+                type = INPUT_KEYBOARD,
                 data =
                 {
                     ki = new KEYBDINPUT
                     {
                         keyCode = (ushort)key,
-                        scan = SCANVALUE,
+                        scan = 0,
                         flags = IsKeyUp ? KEY_UP : 0,
                         time = 0,
                         extraInfo = nint.Zero
@@ -54,23 +53,44 @@ namespace AutoClicker.Library.Input
         {
             var sequences = new List<InputSequence>();
 
-            // проход по словарю и добавление в sequences
             foreach (var kvp in KeyPlaybackBuffer)
             {
-                var sequence = new InputSequence();
+                var timestamp = kvp.Key;
+                var mouseEvents = kvp.Value;
                 var inputs = new List<INPUT>();
-                sequence.Timestamp = kvp.Key;
 
-                foreach (var key in kvp.Value)
+                foreach (var mouseEvent in mouseEvents)
                 {
-                    // inputs.Add(ConvertMouseToInput();
+                    inputs.Add(ConvertMouseToInput(mouseEvent));
                 }
 
-                sequence.Sequence = inputs.ToArray();
-                sequences.Add(sequence);
+                sequences.Add(new InputSequence
+                {
+                    Timestamp = timestamp,
+                    Value = [.. inputs]
+                });
             }
 
             return sequences;
+        }
+        public static INPUT ConvertMouseToInput(MouseEvent mouseEvent)
+        {
+            return new INPUT
+            {
+                type = INPUT_MOUSE,
+                data =
+                {
+                    mi = new MOUSEINPUT
+                    {
+                        x = mouseEvent.X,
+                        y = mouseEvent.Y,
+                        mouseData = 0,
+                        flags = mouseEvent.Flags,
+                        time = 0,
+                        extraInfo = nint.Zero
+                    }
+                }
+            };
         }
     }
 }

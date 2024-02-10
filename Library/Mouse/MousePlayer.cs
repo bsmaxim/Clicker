@@ -1,56 +1,41 @@
 ﻿using System.Diagnostics;
+using System.Runtime.InteropServices;
 using AutoClicker.Library.Input;
+using static AutoClicker.Library.Input.WinInputStructs;
 
-namespace AutoClicker.Library.Mouse
+namespace AutoClicker.Library
 {
-    public class MousePlayer
+
+
+  public class MousePlayer : InputPlayer
+  {
+    public override List<InputSequence> GetInputSequences(Dictionary<long, List<IInputEvent>> keyPlaybackBuffer)
     {
-        private Stopwatch SW;
-        private bool Playing = false;
-        private Task? KeyPlayingTask;
-
-        public MousePlayer()
-        {
-            SW = new();
-        }
-
-        public void Play(Dictionary<long, List<MouseEvent>> keyPlaybackBuffer, int startCooldown)
-        {
-            if (!Playing)
-            {
-                KeyPlayingTask = Task.Run(async () =>
-                {
-                    //var currentTimestamp = 0L;
-
-                    await Task.Delay(startCooldown);
-                    var mouseInputSequences = InputSequencer.BuildSequence(keyPlaybackBuffer);
-
-                    SW.Start();
-                    foreach (var kvp in keyPlaybackBuffer)
-                    {
-                        while (SW.ElapsedMilliseconds < kvp.Key + startCooldown)
-                        {
-                            Thread.Sleep(1);
-                        }
-                        // foreach (var mouseEvent in kvp.Value)
-                        // {
-                        //     if (mouseEvent == MouseEventTypes.Move)
-                        //     {
-
-                        //     }
-                        //     else if (mouseEvent.Type == MouseEventTypes.Down)
-                        //     {
-                        //         MouseSimulator.MouseDown(mouseEvent.Button);
-                        //     }
-                        //     else if (mouseEvent.Type == MouseEventTypes.Up)
-                        //     {
-                        //         MouseSimulator.MouseUp(mouseEvent.Button);
-                        //     }
-                        // }
-                    }
-                });
-
-            }
-        }
+      Dictionary<long, List<MouseEvent>> mouseEventDict = keyPlaybackBuffer.ToDictionary(
+        pair => pair.Key,
+        pair => pair.Value.Cast<MouseEvent>().ToList()
+        );
+      return InputSequencer.BuildSequence(mouseEventDict);
     }
+
+    protected override uint MySendInput(INPUT[] inputs)
+    {
+      for (int i = 0; i < inputs.Length; i++)
+      {
+        ChangeToScreenCoords(ref inputs[i].data.mi.x, ref inputs[i].data.mi.y);
+      }
+
+      return NativeMethods.SendInput(
+        (uint)inputs.Length,
+        inputs,
+        Marshal.SizeOf(typeof(INPUT))
+      );
+    }
+
+    private static void ChangeToScreenCoords(ref int x, ref int y)
+    {
+      x = x * 65536 / NativeMethods.GetSystemMetrics(SystemMetric.SM_CXSCREEN);
+      y = y * 65536 / NativeMethods.GetSystemMetrics(SystemMetric.SM_CYSCREEN);
+    }
+  }
 }

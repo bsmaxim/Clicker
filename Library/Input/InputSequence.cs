@@ -5,6 +5,6 @@ namespace AutoClicker.Library.Input
     public class InputSequence
     {
         public long Timestamp { get; set; }
-        public INPUT[]? Sequence { get; set; }
+        public INPUT[]? Value { get; set; }
     }
 }
