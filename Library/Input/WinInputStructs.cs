@@ -1,10 +1,15 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
-namespace AutoClicker.Library
+namespace AutoClicker.Library.Input
 {
-    public static class InputStructs
+
+    public static class WinInputStructs
     {
+        public const int INPUT_MOUSE = 0;
+        public const int INPUT_KEYBOARD = 1;
+        public const uint KEY_UP = 0x0002;
+
         public struct INPUT
         {
             public uint type;
@@ -18,7 +23,7 @@ namespace AutoClicker.Library
             public uint mouseData;
             public uint flags;
             public uint time;
-            public IntPtr extraInfo;
+            public nint extraInfo;
         }
 
         public struct KEYBDINPUT
@@ -27,7 +32,7 @@ namespace AutoClicker.Library
             public ushort scan;
             public uint flags;
             public uint time;
-            public IntPtr extraInfo;
+            public nint extraInfo;
         }
 
         public struct HARDWAREINPUT
@@ -46,6 +51,6 @@ namespace AutoClicker.Library
             public KEYBDINPUT ki;
             [FieldOffset(0)]
             public HARDWAREINPUT hi;
-        }   
+        }
     }
 }
