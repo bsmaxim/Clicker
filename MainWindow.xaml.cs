@@ -17,15 +17,27 @@ public partial class MainWindow : Window
     private readonly MouseRecorder mouseRecorder = new();
     private readonly MousePlayer mousePlayer = new();
 
+    // get default value from radio button
+    private bool needKeyRecord = false;
+    private bool needMouseRecord = false;
+
     public MainWindow()
     {
         InitializeComponent();
+        needMouseRecord = NeedMouseRecordButton.IsChecked ?? false;
+        needKeyRecord = NeedKeyRecordButton.IsChecked ?? false;
     }
 
     private void OnStartRecord(object sender, RoutedEventArgs e)
     {
-        keyboardRecorder.Start();
-        mouseRecorder.Start();
+        if (needMouseRecord)
+        {
+            mouseRecorder.Start();
+        }
+        if (needKeyRecord)
+        {
+            keyboardRecorder.Start();
+        }
     }
 
     private void OnStopRecord(object sender, RoutedEventArgs e)
@@ -38,5 +50,15 @@ public partial class MainWindow : Window
     {
         keyboardPlayer.Play(keyboardRecorder.KeyPlaybackBuffer, 50);
         mousePlayer.Play(mouseRecorder.KeyPlaybackBuffer, 50);
+    }
+
+    private void ToggleNeedMouseRecord(object sender, RoutedEventArgs e)
+    {
+        needMouseRecord = !needMouseRecord;
+    }
+
+    private void ToggleNeedKeyRecord(object sender, RoutedEventArgs e)
+    {
+        needKeyRecord = !needKeyRecord;
     }
 }

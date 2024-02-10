@@ -84,7 +84,7 @@ namespace AutoClicker.Library.Input
                     {
                         x = mouseEvent.X,
                         y = mouseEvent.Y,
-                        mouseData = 0,
+                        mouseData = mouseEvent.MouseData,
                         flags = mouseEvent.Flags,
                         time = 0,
                         extraInfo = nint.Zero

@@ -5,13 +5,31 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AutoClicker"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow"
+        Height="450" Width="800">
     <Grid>
-        <Button x:Name="StartRecord" Content="Start record" HorizontalAlignment="Left" Margin="125,85,0,0" VerticalAlignment="Top" Click="OnStartRecord"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0" Grid.Column="1">
+            <MenuItem Header="aboba1"></MenuItem>
+            <MenuItem Header="aboba2"></MenuItem>
+            <MenuItem Header="aboba3"></MenuItem>
+        </Menu>
+        <StackPanel Grid.Row="1" Grid.Column="1">
+            <StackPanel Margin="24,62,0,0" Grid.RowSpan="1" HorizontalAlignment="Left" VerticalAlignment="Top">
+                <Button x:Name="StartRecord" Content="Start record" Click="OnStartRecord"/>
 
-        <Button x:Name="StopRecord" Content="Stop record" HorizontalAlignment="Left" Margin="125,110,0,0" VerticalAlignment="Top" Click="OnStopRecord"/>
+                <Button x:Name="StopRecord" Content="Stop record" Click="OnStopRecord"/>
 
-        <Button Content="Play sequence" HorizontalAlignment="Left" Margin="119,149,0,0" VerticalAlignment="Top" Click="OnPlaySequence"/>
+                <Button Content="Play sequence" Click="OnPlaySequence"/>
 
+            </StackPanel>
+            <StackPanel HorizontalAlignment="Left" Orientation="Vertical" VerticalAlignment="Top" Margin="11,16,0,0" Grid.ColumnSpan="2">
+                <CheckBox x:Name="NeedMouseRecordButton" Content="Записывать мышь" IsChecked="True" Cursor="Arrow" Margin="0,0,0,4" Checked="ToggleNeedMouseRecord"/>
+                <CheckBox x:Name="NeedKeyRecordButton" Content="Записывать клавиатуру" IsChecked="True" Cursor="Arrow"  Checked="ToggleNeedKeyRecord"/>
+            </StackPanel>
+        </StackPanel>
     </Grid>
 </Window>

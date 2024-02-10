@@ -1,4 +1,5 @@
 ﻿using System.Windows.Forms;
+using System.Windows.Navigation;
 using MouseEventArgs = System.Windows.Forms.MouseEventArgs;
 
 namespace AutoClicker.Library.Mouse
@@ -87,34 +88,29 @@ namespace AutoClicker.Library.Mouse
 
         private static uint GetFlags(MouseButtons button, MouseEventType eventType)
         {
-            if (eventType == MouseEventType.MouseWheel)
+            return eventType switch
             {
-                return MOUSE_WHEEL;
-            }
-
-            if (eventType == MouseEventType.MouseDown)
-            {
-                return button switch
+                MouseEventType.MouseMove => MOUSE_MOVE | MOUSE_ABSOLUTE,
+                MouseEventType.MouseWheel => MOUSE_WHEEL,
+                MouseEventType.MouseDown => button switch
                 {
-                    MouseButtons.None => MOUSE_MOVE | MOUSE_ABSOLUTE,
                     MouseButtons.Left => MOUSE_LEFTDOWN,
                     MouseButtons.Right => MOUSE_RIGHTDOWN,
                     MouseButtons.Middle => MOUSE_MIDDLEDOWN,
                     MouseButtons.XButton1 => MOUSE_XDOWN,
                     MouseButtons.XButton2 => MOUSE_XDOWN,
                     _ => 0x0000
-                };
-            }
-
-            return button switch
-            {
-                MouseButtons.None => MOUSE_MOVE | MOUSE_ABSOLUTE,
-                MouseButtons.Left => MOUSE_LEFTUP,
-                MouseButtons.Right => MOUSE_RIGHTUP,
-                MouseButtons.Middle => MOUSE_MIDDLEUP,
-                MouseButtons.XButton1 => MOUSE_XUP,
-                MouseButtons.XButton2 => MOUSE_XUP,
-                _ => 0x0000
+                },
+                MouseEventType.MouseUp => button switch
+                {
+                    MouseButtons.Left => MOUSE_LEFTUP,
+                    MouseButtons.Right => MOUSE_RIGHTUP,
+                    MouseButtons.Middle => MOUSE_MIDDLEUP,
+                    MouseButtons.XButton1 => MOUSE_XUP,
+                    MouseButtons.XButton2 => MOUSE_XUP,
+                    _ => 0x0000
+                },
+                _ => throw new NotImplementedException()
             };
         }
     }

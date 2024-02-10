@@ -21,9 +21,13 @@ namespace AutoClicker.Library
 		{
 			if (!Playing)
 			{
+				if (keyPlaybackBuffer.Count == 0)
+				{
+					return;
+				}
+				
 				KeyPlayingTask = Task.Run(async () =>
 				{
-					Console.WriteLine(keyPlaybackBuffer.Count);
 					var currentTimestamp = 0L;
 					// TODO: сделать сборку последовательности на этапе остановки записи последовательности
 					var inputSequences = GetInputSequences(keyPlaybackBuffer);
