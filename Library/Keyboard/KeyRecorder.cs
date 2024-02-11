@@ -2,7 +2,7 @@
 
 namespace AutoClicker.Library.Keyboard
 {
-    public class KeyRecorder : Recorder
+    public class KeyRecorder : InputRecorder
     {
         public KeyRecorder() : base() { }
 

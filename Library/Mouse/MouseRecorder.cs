@@ -4,7 +4,7 @@ using MouseEventArgs = System.Windows.Forms.MouseEventArgs;
 
 namespace AutoClicker.Library.Mouse
 {
-    public class MouseRecorder : Recorder
+    public class MouseRecorder : InputRecorder
     {
         public MouseRecorder() : base() { }
 

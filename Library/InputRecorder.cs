@@ -3,16 +3,33 @@ using System.Diagnostics;
 
 namespace AutoClicker.Library
 {
-    public class Recorder
+    public class InputRecorder
     {
         protected Stopwatch SW;
         public readonly static IKeyboardMouseEvents m_GlobalHook = Hook.GlobalEvents();
         protected bool IsStarted = false;
         public Dictionary<long, List<IInputEvent>> KeyPlaybackBuffer { get; set; } = [];
 
-        public Recorder()
+        #region изменение оффсета на самый ранний тайминг между всеми инстансами
+        protected static List<InputRecorder> Instances { get; set; } = [];
+        protected static int RunningInstancesCount { get; set; } = 0;
+        protected static object LockObject { get; set; } = new();
+        protected static long EarliestTiming { get; set; } = long.MaxValue;
+        #endregion
+
+        public InputRecorder()
         {
             SW = new();
+            Instances.Add(this);
+        }
+
+        ~InputRecorder()
+        {
+            if (IsStarted)
+            {
+                Stop();
+            }
+            Instances.Remove(this);
         }
 
         public void Start()
@@ -25,6 +42,11 @@ namespace AutoClicker.Library
 
             KeyPlaybackBuffer = [];
             SW = new();
+
+            lock (LockObject)
+            {
+                RunningInstancesCount++;
+            }
 
             ConnectHooks();
 
@@ -49,10 +71,28 @@ namespace AutoClicker.Library
             if (IsStarted)
             {
                 SW.Stop();
-                ReformatSequenceTimings();
                 IsStarted = false;
 
                 DisconnectHooks();
+
+                lock (LockObject)
+                {
+                    RunningInstancesCount--;
+                    if (RunningInstancesCount == 0)
+                    {
+                        Instances.ForEach(i =>
+                        {
+                            if (i.KeyPlaybackBuffer.Count > 0)
+                            {
+                                EarliestTiming = Math.Min(EarliestTiming, i.KeyPlaybackBuffer.Keys.Min());
+                            }
+                        });
+
+                        Instances.ForEach(i => i.ReformatSequenceTimings());
+
+                        EarliestTiming = long.MaxValue;
+                    }
+                }
             }
         }
 
@@ -64,9 +104,8 @@ namespace AutoClicker.Library
                 return;
             }
 
-            var startTiming = KeyPlaybackBuffer.Keys.Min();
             var resultDict = KeyPlaybackBuffer.ToDictionary(
-                kvp => kvp.Key - startTiming,
+                kvp => kvp.Key - EarliestTiming,
                 kvp => kvp.Value
             );
             KeyPlaybackBuffer = resultDict;
