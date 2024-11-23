@@ -1,9 +1,11 @@
-﻿using System.Runtime.InteropServices;
-using System.Windows;
+﻿using System.Windows;
+using System.Windows.Input;
 using AutoClicker.Library;
 using AutoClicker.Library.Keyboard;
 using AutoClicker.Library.Mouse;
-using static AutoClicker.Library.Input.WinInputStructs;
+using NHotkey;
+using NHotkey.Wpf;
+
 
 namespace AutoClicker;
 
@@ -12,44 +14,72 @@ namespace AutoClicker;
 /// </summary>
 public partial class MainWindow : Window
 {
-    private readonly KeyRecorder keyboardRecorder = new();
-    private readonly KeyPlayer keyboardPlayer = new();
-    private readonly MouseRecorder mouseRecorder = new();
-    private readonly MousePlayer mousePlayer = new();
+    private bool isRecording = false;
+    private readonly KeyRecorder _keyboardRecorder = new();
+    private readonly KeyPlayer _keyboardPlayer = new();
+    private readonly MouseRecorder _mouseRecorder = new();
+    private readonly MousePlayer _mousePlayer = new();
 
-    // get default value from radio button
     private bool needKeyRecord = false;
     private bool needMouseRecord = false;
+
+    private static readonly KeyGesture IncrementGesture = new KeyGesture(Key.Insert, ModifierKeys.Control | ModifierKeys.Alt);
+
 
     public MainWindow()
     {
         InitializeComponent();
         needMouseRecord = NeedMouseRecordButton.IsChecked ?? false;
         needKeyRecord = NeedKeyRecordButton.IsChecked ?? false;
+
+        HotkeyManager.Current.AddOrReplace("Increment", IncrementGesture, OnRecordToggle);
     }
+
+    private void OnRecordToggle(object sender, HotkeyEventArgs e)
+    {
+        if (isRecording)
+        {
+            OnStopRecord(null, null);
+        }
+        else
+        {
+            OnStartRecord(null, null);
+        }
+    }
+
 
     private void OnStartRecord(object sender, RoutedEventArgs e)
     {
+        if (isRecording)
+        {
+            return;
+        }
         if (needMouseRecord)
         {
-            mouseRecorder.Start();
+            _mouseRecorder.Start();
         }
         if (needKeyRecord)
         {
-            keyboardRecorder.Start();
+            _keyboardRecorder.Start();
         }
+        isRecording = true;
     }
 
     private void OnStopRecord(object sender, RoutedEventArgs e)
     {
-        keyboardRecorder.Stop();
-        mouseRecorder.Stop();
+        if (!isRecording)
+        {
+            return;
+        }
+        _keyboardRecorder.Stop();
+        _mouseRecorder.Stop();
+        isRecording = false;
     }
 
     private void OnPlaySequence(object sender, RoutedEventArgs e)
     {
-        keyboardPlayer.Play(keyboardRecorder.KeyPlaybackBuffer, 50);
-        mousePlayer.Play(mouseRecorder.KeyPlaybackBuffer, 50);
+        _keyboardPlayer.Play(_keyboardRecorder.KeyPlaybackBuffer, 50);
+        _mousePlayer.Play(_mouseRecorder.KeyPlaybackBuffer, 50);
     }
 
     private void ToggleNeedMouseRecord(object sender, RoutedEventArgs e)

@@ -15,11 +15,11 @@ namespace AutoClicker.Library
         }
         public static int GetScreenX()
         {
-            return NativeMethods.GetSystemMetrics(SystemMetric.SM_CXSCREEN);
+            return WinApi.GetSystemMetrics(SystemMetric.SM_CXSCREEN);
         }
         public static int GetScreenY()
         {
-            return NativeMethods.GetSystemMetrics(SystemMetric.SM_CYSCREEN);
+            return WinApi.GetSystemMetrics(SystemMetric.SM_CYSCREEN);
         }
 
         public static int CalculateAbsoluteX(int x)

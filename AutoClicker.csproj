@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <PackageReference Include="MouseKeyHook" Version="5.7.1" />
+    <PackageReference Include="NHotkey.Wpf" Version="3.0.0" />
   </ItemGroup>
 
 </Project>

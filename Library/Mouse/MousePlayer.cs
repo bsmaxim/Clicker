@@ -25,7 +25,7 @@ namespace AutoClicker.Library
         ChangeToScreenCoords(ref inputs[i].data.mi.x, ref inputs[i].data.mi.y);
       }
 
-      return NativeMethods.SendInput(
+      return WinApi.SendInput(
         (uint)inputs.Length,
         inputs,
         Marshal.SizeOf(typeof(INPUT))
@@ -34,8 +34,8 @@ namespace AutoClicker.Library
 
     private static void ChangeToScreenCoords(ref int x, ref int y)
     {
-      x = x * 65536 / NativeMethods.GetSystemMetrics(SystemMetric.SM_CXSCREEN);
-      y = y * 65536 / NativeMethods.GetSystemMetrics(SystemMetric.SM_CYSCREEN);
+      x = x * 65536 / WinApi.GetSystemMetrics(SystemMetric.SM_CXSCREEN);
+      y = y * 65536 / WinApi.GetSystemMetrics(SystemMetric.SM_CYSCREEN);
     }
   }
 }

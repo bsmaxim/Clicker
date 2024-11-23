@@ -25,7 +25,7 @@ namespace AutoClicker.Library
 				{
 					return;
 				}
-				
+
 				KeyPlayingTask = Task.Run(async () =>
 				{
 					var currentTimestamp = 0L;
@@ -87,7 +87,7 @@ namespace AutoClicker.Library
 
 		protected virtual uint MySendInput(INPUT[] inputs)
 		{
-			return NativeMethods.SendInput(
+			return WinApi.SendInput(
 									(uint)inputs.Length,
 									inputs,
 									Marshal.SizeOf(typeof(INPUT))
