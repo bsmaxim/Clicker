@@ -9,7 +9,7 @@ namespace AutoClicker.Library
 
   public class MousePlayer : InputPlayer
   {
-    public override List<InputSequence> GetInputSequences(Dictionary<long, List<IInputEvent>> keyPlaybackBuffer)
+    public override List<InputUnit> GetInputSequences(Dictionary<long, List<IInputEvent>> keyPlaybackBuffer)
     {
       Dictionary<long, List<MouseEvent>> mouseEventDict = keyPlaybackBuffer.ToDictionary(
         pair => pair.Key,

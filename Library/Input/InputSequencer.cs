@@ -5,9 +5,9 @@ namespace AutoClicker.Library.Input
 {
     public static class InputSequencer
     {
-        public static List<InputSequence> BuildSequence(Dictionary<long, List<KeyEvent>> KeyPlaybackBuffer)
+        public static List<InputUnit> BuildSequence(Dictionary<long, List<KeyEvent>> KeyPlaybackBuffer)
         {
-            var sequences = new List<InputSequence>();
+            var sequences = new List<InputUnit>();
 
             foreach (var kvp in KeyPlaybackBuffer)
             {
@@ -20,11 +20,7 @@ namespace AutoClicker.Library.Input
                     inputs.Add(ConvertKeyToInput(keyEvent.KeyCode, keyEvent.IsKeyUp));
                 }
 
-                sequences.Add(new InputSequence
-                {
-                    Timestamp = timestamp,
-                    Value = [.. inputs]
-                });
+                sequences.Add(new InputUnit(timestamp, [.. inputs]));
             }
 
             return sequences;
@@ -37,21 +33,17 @@ namespace AutoClicker.Library.Input
                 type = INPUT_KEYBOARD,
                 data =
                 {
-                    ki = new KEYBDINPUT
-                    {
-                        keyCode = (ushort)key,
-                        scan = 0,
-                        flags = IsKeyUp ? KEY_UP : 0,
-                        time = 0,
-                        extraInfo = nint.Zero
-                    }
+                    ki = new KEYBDINPUT(
+                        (ushort)key,
+                        IsKeyUp ? KEY_UP : 0
+                    )
                 }
             };
         }
 
-        public static List<InputSequence> BuildSequence(Dictionary<long, List<MouseEvent>> KeyPlaybackBuffer)
+        public static List<InputUnit> BuildSequence(Dictionary<long, List<MouseEvent>> KeyPlaybackBuffer)
         {
-            var sequences = new List<InputSequence>();
+            var sequences = new List<InputUnit>();
 
             foreach (var kvp in KeyPlaybackBuffer)
             {
@@ -64,11 +56,7 @@ namespace AutoClicker.Library.Input
                     inputs.Add(ConvertMouseToInput(mouseEvent));
                 }
 
-                sequences.Add(new InputSequence
-                {
-                    Timestamp = timestamp,
-                    Value = [.. inputs]
-                });
+                sequences.Add(new InputUnit(timestamp, [.. inputs]));
             }
 
             return sequences;
@@ -80,15 +68,11 @@ namespace AutoClicker.Library.Input
                 type = INPUT_MOUSE,
                 data =
                 {
-                    mi = new MOUSEINPUT
-                    {
-                        x = mouseEvent.X,
-                        y = mouseEvent.Y,
-                        mouseData = mouseEvent.MouseData,
-                        flags = mouseEvent.Flags,
-                        time = 0,
-                        extraInfo = nint.Zero
-                    }
+                    mi = new MOUSEINPUT(
+                        mouseEvent.X,
+                        mouseEvent.Y,
+                        mouseEvent.MouseData,
+                        mouseEvent.Flags)
                 }
             };
         }

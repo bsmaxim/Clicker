@@ -80,7 +80,7 @@ namespace AutoClicker.Library
 			}
 		}
 
-		public virtual List<InputSequence> GetInputSequences(Dictionary<long, List<IInputEvent>> keyPlaybackBuffer)
+		public virtual List<InputUnit> GetInputSequences(Dictionary<long, List<IInputEvent>> keyPlaybackBuffer)
 		{
 			throw new NotImplementedException();
 		}

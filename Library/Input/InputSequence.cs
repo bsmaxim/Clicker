@@ -2,9 +2,9 @@
 
 namespace AutoClicker.Library.Input
 {
-    public class InputSequence
+    public class InputUnit(long timestamp, INPUT[]? value)
     {
-        public long Timestamp { get; set; }
-        public INPUT[]? Value { get; set; }
+        public long Timestamp { get; set; } = timestamp;
+        public INPUT[]? Value { get; set; } = value;
     }
 }

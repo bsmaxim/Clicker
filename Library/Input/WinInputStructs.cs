@@ -16,23 +16,23 @@ namespace AutoClicker.Library.Input
             public InputUnion data;
         }
 
-        public struct MOUSEINPUT
+        public struct MOUSEINPUT(int x, int y, uint mouseData, uint flags)
         {
-            public int x;
-            public int y;
-            public uint mouseData;
-            public uint flags;
-            public uint time;
-            public nint extraInfo;
+            public int x = x;
+            public int y = y;
+            public uint mouseData = mouseData;
+            public uint flags = flags;
+            public uint time = 0;
+            public nint extraInfo = nint.Zero;
         }
 
-        public struct KEYBDINPUT
+        public struct KEYBDINPUT(ushort keyCode, uint flags)
         {
-            public ushort keyCode;
-            public ushort scan;
-            public uint flags;
-            public uint time;
-            public nint extraInfo;
+            public ushort keyCode = keyCode;
+            public ushort scan = 0;
+            public uint flags = flags;
+            public uint time = 0;
+            public nint extraInfo = nint.Zero;
         }
 
         public struct HARDWAREINPUT
