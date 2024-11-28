@@ -1,9 +1,7 @@
 ﻿using System.Runtime.InteropServices;
-using System.Windows.Forms;
 
 namespace AutoClicker.Library.Input
 {
-
     public static class WinInputStructs
     {
         public const int INPUT_MOUSE = 0;
@@ -47,8 +45,10 @@ namespace AutoClicker.Library.Input
         {
             [FieldOffset(0)] // Все поля размещаются в одном и том же месте. В начале структуры
             public MOUSEINPUT mi;
+
             [FieldOffset(0)]
             public KEYBDINPUT ki;
+
             [FieldOffset(0)]
             public HARDWAREINPUT hi;
         }

@@ -13,10 +13,12 @@ namespace AutoClicker.Library
         {
             return (long)((double)watch.ElapsedTicks / Stopwatch.Frequency * Million);
         }
+
         public static int GetScreenX()
         {
             return WinApi.GetSystemMetrics(SystemMetric.SM_CXSCREEN);
         }
+
         public static int GetScreenY()
         {
             return WinApi.GetSystemMetrics(SystemMetric.SM_CYSCREEN);

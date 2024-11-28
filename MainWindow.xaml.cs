@@ -1,11 +1,9 @@
 ﻿using System.Windows;
 using System.Windows.Input;
-using AutoClicker.Library;
 using AutoClicker.Library.Player;
 using AutoClicker.Library.Recorder;
 using NHotkey;
 using NHotkey.Wpf;
-
 
 namespace AutoClicker;
 
@@ -23,8 +21,10 @@ public partial class MainWindow : Window
     private bool needKeyRecord = false;
     private bool needMouseRecord = false;
 
-    private static readonly KeyGesture IncrementGesture = new KeyGesture(Key.Insert, ModifierKeys.Control | ModifierKeys.Alt);
-
+    private static readonly KeyGesture IncrementGesture = new KeyGesture(
+        Key.Insert,
+        ModifierKeys.Control | ModifierKeys.Alt
+    );
 
     public MainWindow()
     {
@@ -46,7 +46,6 @@ public partial class MainWindow : Window
             OnStartRecord(null, null);
         }
     }
-
 
     private void OnStartRecord(object sender, RoutedEventArgs e)
     {

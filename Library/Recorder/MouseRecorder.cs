@@ -6,7 +6,8 @@ namespace AutoClicker.Library.Recorder
 {
     public class MouseRecorder : InputRecorder
     {
-        public MouseRecorder() : base() { }
+        public MouseRecorder()
+            : base() { }
 
         protected override void ConnectHooks()
         {
@@ -15,6 +16,7 @@ namespace AutoClicker.Library.Recorder
             m_GlobalHook.MouseMove += HookMouseEvent;
             m_GlobalHook.MouseWheel += HookMouseWheel;
         }
+
         protected override void DisconnectHooks()
         {
             m_GlobalHook.MouseDown -= HookMouseDown;
@@ -28,7 +30,7 @@ namespace AutoClicker.Library.Recorder
             MouseDown,
             MouseUp,
             MouseMove,
-            MouseWheel
+            MouseWheel,
         }
 
         private void HookEvent(MouseEventArgs e, MouseEventType eventType)
@@ -43,7 +45,7 @@ namespace AutoClicker.Library.Recorder
                 MouseData = (uint)e.Delta,
                 Flags = GetFlags(e.Button, eventType),
                 Timestamp = currentTimestamp,
-                ExtraInfo = e.Clicks
+                ExtraInfo = e.Clicks,
             };
 
             if (KeyPlaybackBuffer.TryGetValue(currentTimestamp, out List<IInputEvent>? value))
@@ -54,21 +56,23 @@ namespace AutoClicker.Library.Recorder
             {
                 KeyPlaybackBuffer[currentTimestamp] = [me];
             }
-
         }
 
         private void HookMouseWheel(object? sender, MouseEventArgs e)
         {
             HookEvent(e, MouseEventType.MouseWheel);
         }
+
         private void HookMouseEvent(object? sender, MouseEventArgs e)
         {
             HookEvent(e, MouseEventType.MouseMove);
         }
+
         private void HookMouseUp(object? sender, MouseEventArgs e)
         {
             HookEvent(e, MouseEventType.MouseUp);
         }
+
         private void HookMouseDown(object? sender, MouseEventArgs e)
         {
             HookEvent(e, MouseEventType.MouseDown);
@@ -99,7 +103,7 @@ namespace AutoClicker.Library.Recorder
                     MouseButtons.Middle => MOUSE_MIDDLEDOWN,
                     MouseButtons.XButton1 => MOUSE_XDOWN,
                     MouseButtons.XButton2 => MOUSE_XDOWN,
-                    _ => 0x0000
+                    _ => 0x0000,
                 },
                 MouseEventType.MouseUp => button switch
                 {
@@ -108,11 +112,10 @@ namespace AutoClicker.Library.Recorder
                     MouseButtons.Middle => MOUSE_MIDDLEUP,
                     MouseButtons.XButton1 => MOUSE_XUP,
                     MouseButtons.XButton2 => MOUSE_XUP,
-                    _ => 0x0000
+                    _ => 0x0000,
                 },
-                _ => throw new NotImplementedException()
+                _ => throw new NotImplementedException(),
             };
         }
     }
-
 }

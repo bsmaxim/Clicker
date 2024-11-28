@@ -5,7 +5,9 @@ namespace AutoClicker.Library.Input
 {
     public static class InputSequencer
     {
-        public static List<InputUnit> BuildSequence(Dictionary<long, List<KeyEvent>> KeyPlaybackBuffer)
+        public static List<InputUnit> BuildSequence(
+            Dictionary<long, List<KeyEvent>> KeyPlaybackBuffer
+        )
         {
             var sequences = new List<InputUnit>();
 
@@ -26,22 +28,9 @@ namespace AutoClicker.Library.Input
             return sequences;
         }
 
-        private static INPUT ConvertKeyToInput(Keys key, bool IsKeyUp)
-        {
-            return new INPUT
-            {
-                type = INPUT_KEYBOARD,
-                data =
-                {
-                    ki = new KEYBDINPUT(
-                        (ushort)key,
-                        IsKeyUp ? KEY_UP : 0
-                    )
-                }
-            };
-        }
-
-        public static List<InputUnit> BuildSequence(Dictionary<long, List<MouseEvent>> KeyPlaybackBuffer)
+        public static List<InputUnit> BuildSequence(
+            Dictionary<long, List<MouseEvent>> KeyPlaybackBuffer
+        )
         {
             var sequences = new List<InputUnit>();
 
@@ -61,6 +50,7 @@ namespace AutoClicker.Library.Input
 
             return sequences;
         }
+
         public static INPUT ConvertMouseToInput(MouseEvent mouseEvent)
         {
             return new INPUT
@@ -72,8 +62,18 @@ namespace AutoClicker.Library.Input
                         mouseEvent.X,
                         mouseEvent.Y,
                         mouseEvent.MouseData,
-                        mouseEvent.Flags)
-                }
+                        mouseEvent.Flags
+                    ),
+                },
+            };
+        }
+
+        public static INPUT ConvertKeyToInput(Keys key, bool IsKeyUp)
+        {
+            return new INPUT
+            {
+                type = INPUT_KEYBOARD,
+                data = { ki = new KEYBDINPUT((ushort)key, IsKeyUp ? KEY_UP : 0) },
             };
         }
     }
