@@ -2,9 +2,9 @@
 using System.Windows.Navigation;
 using MouseEventArgs = System.Windows.Forms.MouseEventArgs;
 
-namespace AutoClicker.Library.Mouse
+namespace AutoClicker.Library.Recorder
 {
-    public class MouseRecorder : Recorder
+    public class MouseRecorder : InputRecorder
     {
         public MouseRecorder() : base() { }
 

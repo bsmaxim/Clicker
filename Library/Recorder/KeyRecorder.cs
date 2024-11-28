@@ -1,8 +1,8 @@
 ﻿using System.Windows.Forms;
 
-namespace AutoClicker.Library.Keyboard
+namespace AutoClicker.Library.Recorder
 {
-    public class KeyRecorder : Recorder
+    public class KeyRecorder : InputRecorder
     {
         public KeyRecorder() : base() { }
 

@@ -1,16 +1,16 @@
 ﻿using Gma.System.MouseKeyHook;
 using System.Diagnostics;
 
-namespace AutoClicker.Library
+namespace AutoClicker.Library.Recorder
 {
-    public class Recorder
+    public class InputRecorder
     {
         protected Stopwatch SW;
         public readonly static IKeyboardMouseEvents m_GlobalHook = Hook.GlobalEvents();
         protected bool IsStarted = false;
         public Dictionary<long, List<IInputEvent>> KeyPlaybackBuffer { get; set; } = [];
 
-        public Recorder()
+        public InputRecorder()
         {
             SW = new();
         }

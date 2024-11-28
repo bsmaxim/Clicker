@@ -1,8 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Input;
 using AutoClicker.Library;
-using AutoClicker.Library.Keyboard;
-using AutoClicker.Library.Mouse;
+using AutoClicker.Library.Player;
+using AutoClicker.Library.Recorder;
 using NHotkey;
 using NHotkey.Wpf;
 

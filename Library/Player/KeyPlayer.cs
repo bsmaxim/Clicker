@@ -1,7 +1,7 @@
 ﻿using AutoClicker.Library.Input;
 
 
-namespace AutoClicker.Library.Keyboard
+namespace AutoClicker.Library.Player
 {
   public class KeyPlayer : InputPlayer
   {

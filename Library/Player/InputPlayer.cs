@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using AutoClicker.Library.Input;
 using static AutoClicker.Library.Input.WinInputStructs;
 
-namespace AutoClicker.Library
+namespace AutoClicker.Library.Player
 {
 
 	public class InputPlayer
