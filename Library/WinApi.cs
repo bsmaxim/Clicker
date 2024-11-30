@@ -35,7 +35,7 @@ namespace AutoClicker.Library
         [DllImport("user32.dll", SetLastError = true)]
         internal static extern uint SendInput(
             uint numberOfInputs,
-            INPUT[] inputs,
+            UserInput[] inputs,
             int sizeOfInputStructure
         );
 

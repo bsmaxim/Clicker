@@ -6,51 +6,52 @@ namespace AutoClicker.Library.Input
     {
         public const int INPUT_MOUSE = 0;
         public const int INPUT_KEYBOARD = 1;
+        public const int INPUT_HARDWARE = 2; // Для аппаратного ввода.
         public const uint KEY_UP = 0x0002;
 
-        public struct INPUT
+        public struct UserInput
         {
-            public uint type;
-            public InputUnion data;
+            public uint Type;
+            public InputDataUnion Data;
         }
 
-        public struct MOUSEINPUT(int x, int y, uint mouseData, uint flags)
+        public struct MouseInputData(int x, int y, uint mouseData, uint flags)
         {
-            public int x = x;
-            public int y = y;
-            public uint mouseData = mouseData;
-            public uint flags = flags;
-            public uint time = 0;
-            public nint extraInfo = nint.Zero;
+            public int X = x;
+            public int Y = y;
+            public uint MouseData = mouseData;
+            public uint Flags = flags;
+            public uint Time = 0;
+            public nint ExtraInfo = nint.Zero;
         }
 
-        public struct KEYBDINPUT(ushort keyCode, uint flags)
+        public struct KeyboardInputData(ushort keyCode, uint flags)
         {
-            public ushort keyCode = keyCode;
-            public ushort scan = 0;
-            public uint flags = flags;
-            public uint time = 0;
-            public nint extraInfo = nint.Zero;
+            public ushort KeyCode = keyCode;
+            public ushort Scan = 0;
+            public uint Flags = flags;
+            public uint Time = 0;
+            public nint ExtraInfo = nint.Zero;
         }
 
-        public struct HARDWAREINPUT
+        public struct HardwareInputData(uint msg, ushort paramL, ushort paramH)
         {
-            public uint msg;
-            public ushort paramL;
-            public ushort paramH;
+            public uint Msg = msg;
+            public ushort ParamL = paramL;
+            public ushort ParamH = paramH;
         }
 
         [StructLayout(LayoutKind.Explicit)] // Явное размещение полей
-        public struct InputUnion
+        public struct InputDataUnion
         {
             [FieldOffset(0)] // Все поля размещаются в одном и том же месте. В начале структуры
-            public MOUSEINPUT mi;
+            public MouseInputData MouseInput;
 
             [FieldOffset(0)]
-            public KEYBDINPUT ki;
+            public KeyboardInputData KeyboardInput;
 
             [FieldOffset(0)]
-            public HARDWAREINPUT hi;
+            public HardwareInputData HardwareInput;
         }
     }
 }

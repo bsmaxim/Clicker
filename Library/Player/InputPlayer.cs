@@ -94,9 +94,9 @@ namespace AutoClicker.Library.Player
             throw new NotImplementedException();
         }
 
-        protected virtual uint MySendInput(INPUT[] inputs)
+        protected virtual uint MySendInput(UserInput[] inputs)
         {
-            return WinApi.SendInput((uint)inputs.Length, inputs, Marshal.SizeOf(typeof(INPUT)));
+            return WinApi.SendInput((uint)inputs.Length, inputs, Marshal.SizeOf(typeof(UserInput)));
         }
     }
 }

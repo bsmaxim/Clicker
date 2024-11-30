@@ -18,14 +18,14 @@ namespace AutoClicker.Library.Player
             return InputSequencer.BuildSequence(mouseEventDict);
         }
 
-        protected override uint MySendInput(INPUT[] inputs)
+        protected override uint MySendInput(UserInput[] inputs)
         {
             for (int i = 0; i < inputs.Length; i++)
             {
-                ChangeToScreenCoords(ref inputs[i].data.mi.x, ref inputs[i].data.mi.y);
+                ChangeToScreenCoords(ref inputs[i].Data.MouseInput.X, ref inputs[i].Data.MouseInput.Y);
             }
 
-            return WinApi.SendInput((uint)inputs.Length, inputs, Marshal.SizeOf(typeof(INPUT)));
+            return WinApi.SendInput((uint)inputs.Length, inputs, Marshal.SizeOf(typeof(UserInput)));
         }
 
         private static void ChangeToScreenCoords(ref int x, ref int y)

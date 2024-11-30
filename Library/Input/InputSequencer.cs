@@ -15,11 +15,11 @@ namespace AutoClicker.Library.Input
             {
                 var timestamp = kvp.Key;
                 var keyEvents = kvp.Value;
-                var inputs = new List<INPUT>();
+                var inputs = new List<UserInput>();
 
                 foreach (var keyEvent in keyEvents)
                 {
-                    inputs.Add(ConvertKeyToInput(keyEvent.KeyCode, keyEvent.IsKeyUp));
+                    inputs.Add(CreateKeyboardInput(keyEvent.KeyCode, keyEvent.IsKeyUp));
                 }
 
                 sequences.Add(new InputUnit(timestamp, [.. inputs]));
@@ -38,11 +38,11 @@ namespace AutoClicker.Library.Input
             {
                 var timestamp = kvp.Key;
                 var mouseEvents = kvp.Value;
-                var inputs = new List<INPUT>();
+                var inputs = new List<UserInput>();
 
                 foreach (var mouseEvent in mouseEvents)
                 {
-                    inputs.Add(ConvertMouseToInput(mouseEvent));
+                    inputs.Add(CreateMouseInput(mouseEvent));
                 }
 
                 sequences.Add(new InputUnit(timestamp, [.. inputs]));
@@ -51,14 +51,14 @@ namespace AutoClicker.Library.Input
             return sequences;
         }
 
-        public static INPUT ConvertMouseToInput(MouseEvent mouseEvent)
+        public static UserInput CreateMouseInput(MouseEvent mouseEvent)
         {
-            return new INPUT
+            return new UserInput
             {
-                type = INPUT_MOUSE,
-                data =
+                Type = INPUT_MOUSE,
+                Data =
                 {
-                    mi = new MOUSEINPUT(
+                    MouseInput = new MouseInputData(
                         mouseEvent.X,
                         mouseEvent.Y,
                         mouseEvent.MouseData,
@@ -68,12 +68,24 @@ namespace AutoClicker.Library.Input
             };
         }
 
-        public static INPUT ConvertKeyToInput(Keys key, bool IsKeyUp)
+        public static UserInput CreateKeyboardInput(Keys key, bool IsKeyUp)
         {
-            return new INPUT
+            return new UserInput
             {
-                type = INPUT_KEYBOARD,
-                data = { ki = new KEYBDINPUT((ushort)key, IsKeyUp ? KEY_UP : 0) },
+                Type = INPUT_KEYBOARD,
+                Data = { KeyboardInput = new KeyboardInputData((ushort)key, IsKeyUp ? KEY_UP : 0) },
+            };
+        }
+
+        public static UserInput CreateHardwareInput(uint msg, ushort paramL, ushort paramH)
+        {
+            return new UserInput
+            {
+                Type = INPUT_HARDWARE,
+                Data = new InputDataUnion
+                {
+                    HardwareInput = new HardwareInputData(msg, paramL, paramH),
+                },
             };
         }
     }

@@ -5,12 +5,12 @@ namespace AutoClicker.Library.Input
 {
     public class InputUnit(
         long timestamp,
-        INPUT[]? value,
+        UserInput[]? value,
         ModifierKeys modifierKeys = ModifierKeys.None
     )
     {
         public long Timestamp { get; set; } = timestamp;
-        public INPUT[]? Value { get; set; } = value;
+        public UserInput[]? Value { get; set; } = value;
         public ModifierKeys ModifierKeys { get; set; } = modifierKeys;
     }
 }
